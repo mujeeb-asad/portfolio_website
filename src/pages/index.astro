@@ -1,0 +1,186 @@
+---
+import '@fontsource/press-start-2p/400.css';
+import '@fontsource/vt323/400.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/ibm-plex-mono/600.css';
+import '../styles/global.css';
+import Window from '../components/Window.astro';
+import { person, intro, keywords, nav, hooks, projects, tools, leadership, contact } from '../data/site.js';
+
+const pad = (n) => String(n).padStart(2, '0');
+---
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{person.name}</title>
+    <meta name="description" content={person.description} />
+    <meta property="og:title" content={person.name} />
+    <meta property="og:description" content={person.description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#12102a" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        root.classList.add('js');
+        try {
+          var asked = new URLSearchParams(location.search).get('theme');
+          var saved = asked || localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#projects">Skip to projects</a>
+
+    <nav class="menubar" aria-label="Sections">
+      <a class="menubar__brand" href="#top">
+        <span class="menubar__logo" aria-hidden="true"></span>
+        <span class="menubar__name">{person.name}</span>
+      </a>
+      <ul class="menubar__links">
+        {nav.map((n) => <li><a href={`#${n.id}`}>{n.label}</a></li>)}
+      </ul>
+      <div class="menubar__right">
+        <button class="menubar__theme" type="button" data-theme-toggle aria-label="Switch colour theme">
+          <span class="menubar__swatch" aria-hidden="true"></span>
+          <span data-theme-label>Light</span>
+        </button>
+        <span class="menubar__clock" data-clock aria-hidden="true">00:00</span>
+      </div>
+    </nav>
+
+    <header class="intro" id="top">
+      <div class="intro__floor" aria-hidden="true"></div>
+      <div class="col intro__inner">
+        <h1 class="intro__hi">Hi, I'm <span class="intro__name">{person.name}</span><span class="cursor" aria-hidden="true"></span></h1>
+        <div class="intro__lead">
+          {intro.map((p) => <p set:html={p} />)}
+        </div>
+        <ul class="keywords" aria-label="Areas I work in">
+          {keywords.map((k) => <li>{k}</li>)}
+        </ul>
+        <div class="actions">
+          <a class="btn btn--primary" href={person.cv} target="_blank" rel="noopener">CV</a>
+          <a class="btn" href={person.github} target="_blank" rel="noopener">GitHub</a>
+          <a class="btn" href={person.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="col">
+      <section class="section" id="projects" aria-labelledby="projects-hook">
+        <h2 class="hook reveal" id="projects-hook">{hooks.projects}</h2>
+        <div class="stack">
+          {projects.map((p, i) => (
+            <Window id={p.id} title={`Project ${pad(i + 1)}`} accent={p.accent}>
+              <h3 class="proj__title">{p.title}</h3>
+              <p class="proj__meta">
+                {p.meta.map((m, mi) => <>{mi > 0 && <i aria-hidden="true">/</i>}<span>{m}</span></>)}
+              </p>
+              <div class="prose">
+                {p.prose.map((t) => <p>{t}</p>)}
+              </div>
+              {p.links.length > 0 && (
+                <div class="actions">
+                  {p.links.map((l, li) => (
+                    <a class={`btn${li === 0 ? ' btn--primary' : ''}`} href={l.href} target="_blank" rel="noopener">
+                      {l.label}<span class="ext" aria-hidden="true"></span>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </Window>
+          ))}
+        </div>
+      </section>
+
+      <section class="section" id="tools" aria-labelledby="tools-hook">
+        <h2 class="hook reveal" id="tools-hook">{hooks.tools}</h2>
+        <ul class="tools reveal">
+          {tools.map((t) => (
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d={t.path} /></svg>
+              <span>{t.name}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="section" id="leadership" aria-labelledby="leadership-hook">
+        <h2 class="hook reveal" id="leadership-hook">{hooks.leadership}</h2>
+        <div class="prose prose--lg reveal">
+          <p set:html={leadership} />
+        </div>
+      </section>
+
+      <section class="section" id="contact" aria-labelledby="contact-hook">
+        <h2 class="hook reveal" id="contact-hook">{hooks.contact}</h2>
+        <div class="reveal">
+          <div class="prose prose--lg">
+            <p>{contact}</p>
+          </div>
+          <a class="mail" href={`mailto:${person.email}`}>{person.email}</a>
+          <div class="actions">
+            <a class="btn btn--primary" href={`mailto:${person.email}`}>Email me</a>
+            <a class="btn" href={person.github} target="_blank" rel="noopener">GitHub</a>
+            <a class="btn" href={person.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+            <a class="btn" href={person.cv} target="_blank" rel="noopener">CV</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot col">
+      <span>&copy; 2026 {person.name}</span>
+      <span>Thanks for stopping by</span>
+    </footer>
+
+    <script>
+      const root = document.documentElement;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Theme
+      const themeBtn = document.querySelector('[data-theme-toggle]');
+      const themeLabel = document.querySelector('[data-theme-label]');
+      const syncTheme = () => {
+        const dark = root.getAttribute('data-theme') !== 'light';
+        if (themeLabel) themeLabel.textContent = dark ? 'Light' : 'Dark';
+        themeBtn?.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+      };
+      themeBtn?.addEventListener('click', () => {
+        const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        syncTheme();
+      });
+      syncTheme();
+
+      // Clock
+      const clock = document.querySelector('[data-clock]');
+      const tick = () => {
+        const d = new Date();
+        if (clock) clock.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+      };
+      tick();
+      setInterval(tick, 15000);
+
+      // Blocks rise in as they enter the viewport
+      const reveals = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window && !reduce) {
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+          }
+        }, { threshold: 0.01, rootMargin: '0px 0px -8% 0px' });
+        reveals.forEach((el) => io.observe(el));
+      } else {
+        reveals.forEach((el) => el.classList.add('in'));
+      }
+    </script>
+  </body>
+</html>
