@@ -566,22 +566,31 @@ a {
    -------------------------------------------------------------------------- */
 
 .tools {
+  --per-row: 6;
+  --gap: 16px;
   display: flex;
   flex-wrap: wrap;
-  gap: 16px 18px;
+  justify-content: center;
+  gap: var(--gap);
 }
 
+/* Every tile is the same width, so rows line up and the last row sits centred */
 .tools li {
   --pop: var(--pink);
+  flex: 0 0 calc((100% - (var(--per-row) - 1) * var(--gap)) / var(--per-row) - 0.5px);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 11px;
-  padding: 10px 15px 10px 13px;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 18px 6px 14px;
   border: var(--bw) solid var(--edge);
   background: var(--surface);
   box-shadow: 4px 4px 0 var(--pop);
-  font: 400 23px/1 var(--font-term);
-  letter-spacing: 0.04em;
+  font: 400 21px/1.05 var(--font-term);
+  letter-spacing: 0.03em;
+  text-align: center;
   transition: transform 0.16s var(--ease), box-shadow 0.16s var(--ease), background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -598,8 +607,8 @@ a {
 
 .tools svg {
   flex: none;
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   fill: currentColor;
 }
 
@@ -669,11 +678,114 @@ a {
   }
 
   .tools {
+    --per-row: 4;
+    --gap: 14px;
+  }
+}
+
+/* Phone-only intro: one-line greeting, compact tags, tighter prose.
+   Desktop and tablet keep the layout defined above. */
+@media (max-width: 640px) {
+  /* Menu bar: all four links on one line, sized to the screen, no sideways scroll */
+  .menubar {
+    gap: 8px;
+    padding: 0 8px;
+  }
+
+  .menubar__links {
+    flex: 1;
+    justify-content: space-between;
+    gap: 0;
+    margin-right: 0;
+    overflow: visible;
+  }
+
+  .menubar__links a {
+    padding: 6px 4px;
+    font-size: clamp(13px, 4.4vw, 18px);
+    letter-spacing: 0.03em;
+  }
+
+  .intro {
+    min-height: 0;
+    padding: calc(var(--bar-h) + 52px) 0 104px;
+  }
+
+  /* 19 characters plus the cursor must fit one line: size follows the screen width */
+  .intro__hi {
+    font-size: clamp(12px, 4.4vw, 19px);
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  .intro__lead {
     gap: 14px;
+    margin-top: 26px;
+  }
+
+  /* Fit as much prose per line as the screen allows: narrower gutters,
+     slightly smaller type, tighter word gaps, and hyphenation so a long
+     word no longer pushes the whole line break early. */
+  .col {
+    padding-inline: 14px;
+  }
+
+  .win__body {
+    padding: 20px 15px 22px;
+  }
+
+  .intro__lead,
+  .prose,
+  .prose--lg {
+    font-size: 14.5px;
+    line-height: 1.75;
+    word-spacing: -0.12em;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    hyphenate-limit-chars: 7 3 3;
+  }
+
+  .keywords {
+    gap: 7px;
+    margin: 26px 0 30px;
+  }
+
+  .keywords li {
+    padding: 2px 7px 3px;
+    font-size: 16px;
+    letter-spacing: 0.03em;
+  }
+
+  .intro .actions {
+    gap: 12px;
+  }
+
+  .intro .btn {
+    padding: 11px 13px;
+    font-size: 10px;
+  }
+
+  .intro__floor {
+    height: 26%;
+  }
+
+  /* Tools: three compact tiles per row */
+  .tools {
+    --per-row: 3;
+    --gap: 10px;
   }
 
   .tools li {
-    font-size: 21px;
+    gap: 8px;
+    padding: 13px 4px 10px;
+    box-shadow: 3px 3px 0 var(--pop);
+    font-size: 17px;
+    letter-spacing: 0.02em;
+  }
+
+  .tools svg {
+    width: 22px;
+    height: 22px;
   }
 }
 
