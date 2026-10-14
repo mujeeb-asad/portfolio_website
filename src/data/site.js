@@ -135,10 +135,10 @@ export const form = {
   endpoint: 'https://api.web3forms.com/submit',
   accessKey: 'e2b706a9-9b7b-4710-9b7c-368fb3575c02',
   topics: [
-    'A full-time role',
-    'An internship',
-    'Freelance or contract work',
-    'A research collaboration',
+    'Project or freelance work',
+    'Full-time role',
+    'Internship',
+    'Research collaboration',
     'Something else',
   ],
 };
