@@ -123,5 +123,30 @@ export const tools = [
 export const leadership =
   'As Director of Logistics at <b>SPADES</b> I led the logistics team for PSIFI, the society\'s flagship event, and managed its 60 lakh PKR budget. I have also served as Assistant Director of Logistics at <b>LUMUN</b>, running purchasing, inventory and merchandise sales, and as Director of Registrations at the <b>LUMS Chess Club</b>, handling school outreach and tournament registrations.';
 
-export const contact =
-  'I work across machine learning, LLM agents, computer vision and backend systems. If you would like to work with me, drop me an email.';
+export const contact = {
+  lead: 'I work across machine learning, LLM agents, computer vision and backend systems. If you would like to work with me, send me a message and tell me a little about what you have in mind.',
+  formNote: 'Fields marked optional can be left empty. Everything else helps me get back to you properly.',
+  emailLead: 'Rather write from your own inbox? Email me directly at',
+};
+
+// Contact form: submissions are emailed to Mujeeb by Web3Forms (web3forms.com).
+// Paste the access key it gives you below. The key is designed to be public.
+// While it is empty the form only appears in local development, never on the live site.
+export const form = {
+  endpoint: 'https://api.web3forms.com/submit',
+  accessKey: '8622039b-99b3-44a9-b3cf-d7ff592d8456',
+  topics: [
+    'A full-time role',
+    'An internship',
+    'Freelance or contract work',
+    'A research collaboration',
+    'Something else',
+  ],
+};
+
+// Quick links shown in the menu under the section links.
+export const quickLinks = [
+  { label: 'CV', href: '/Mujeeb_Asad_CV.pdf' },
+  { label: 'GitHub', href: 'https://github.com/mujeeb-asad' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mujeeb-asad-23b322318/' },
+];
