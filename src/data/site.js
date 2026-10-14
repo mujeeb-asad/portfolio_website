@@ -125,7 +125,6 @@ export const leadership =
 
 export const contact = {
   lead: 'I work across machine learning, LLM agents, computer vision and backend systems. If you would like to work with me, send me a message and tell me a little about what you have in mind.',
-  formNote: 'Fields marked optional can be left empty. Everything else helps me get back to you properly.',
   emailLead: 'Rather write from your own inbox? Email me directly at',
 };
 

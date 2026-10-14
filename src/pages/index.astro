@@ -31,9 +31,11 @@ const showForm = Boolean(form.accessKey) || import.meta.env.DEV;
         var root = document.documentElement;
         root.classList.add('js');
         try {
-          var asked = new URLSearchParams(location.search).get('theme');
-          var saved = asked || localStorage.getItem('theme');
+          var q = new URLSearchParams(location.search);
+          var saved = q.get('theme') || localStorage.getItem('theme');
           if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
+          var pal = q.get('palette') || localStorage.getItem('palette');
+          if (pal === 'meadow' || pal === 'cherry') root.setAttribute('data-palette', pal);
         } catch (e) {}
       })();
     </script>
@@ -42,11 +44,15 @@ const showForm = Boolean(form.accessKey) || import.meta.env.DEV;
     <a class="skip" href="#projects">Skip to projects</a>
 
     <header class="menubar">
-      <!-- The logo square stays: it will become the colour palette switch -->
-      <a class="menubar__brand" href="#top" aria-label="Back to top">
-        <span class="menubar__logo" aria-hidden="true"></span>
-        <span class="menubar__name">{person.name}</span>
-      </a>
+      <div class="menubar__left">
+        <!-- Easter egg: the logo square cycles the colour palette -->
+        <button class="logo-btn" type="button" data-palette-cycle aria-label="Change colour palette">
+          <span class="menubar__logo" aria-hidden="true"></span>
+        </button>
+        <a class="menubar__brand" href="#top" aria-label="Back to top">
+          <span class="menubar__name">{person.name}</span>
+        </a>
+      </div>
 
       <div class="menubar__right">
         <span class="menubar__clock" data-clock aria-hidden="true">00:00</span>
@@ -189,7 +195,6 @@ const showForm = Boolean(form.accessKey) || import.meta.env.DEV;
             </button>
           </header>
           <div class="win__body modal__body">
-            <p class="modal__note">{contact.formNote}</p>
             <form class="form" data-form data-email={person.email} action={form.endpoint} method="POST" novalidate>
               <input type="hidden" name="access_key" value={form.accessKey} />
               <input type="hidden" name="from_name" value="Portfolio contact form" />
@@ -252,13 +257,45 @@ const showForm = Boolean(form.accessKey) || import.meta.env.DEV;
         const dark = root.getAttribute('data-theme') !== 'light';
         themeBtn?.setAttribute('aria-label', dark ? 'Dark mode on. Switch to light mode' : 'Light mode on. Switch to dark mode');
       };
+      // Keeps the browser bar colour in step with the page background
+      const metaTheme = document.querySelector('meta[name="theme-color"]');
+      const syncMeta = () => metaTheme?.setAttribute('content', getComputedStyle(root).getPropertyValue('--bg').trim());
+
+      // Brief cross-fade so palette and theme changes feel smooth
+      let fadeTimer = 0;
+      const crossFade = () => {
+        if (reduce) return;
+        root.classList.add('palette-shift');
+        clearTimeout(fadeTimer);
+        fadeTimer = setTimeout(() => root.classList.remove('palette-shift'), 450);
+      };
+
       themeBtn?.addEventListener('click', () => {
         const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        crossFade();
         root.setAttribute('data-theme', next);
         try { localStorage.setItem('theme', next); } catch (e) {}
         syncTheme();
+        syncMeta();
       });
       syncTheme();
+      syncMeta();
+
+      // Easter egg: the logo square cycles through the colour palettes
+      const PALETTES = ['candy', 'meadow', 'cherry'];
+      const cycle = document.querySelector('[data-palette-cycle]');
+      cycle?.addEventListener('click', () => {
+        const now = root.getAttribute('data-palette') || 'candy';
+        const next = PALETTES[(PALETTES.indexOf(now) + 1) % PALETTES.length];
+        crossFade();
+        if (next === 'candy') root.removeAttribute('data-palette');
+        else root.setAttribute('data-palette', next);
+        try { localStorage.setItem('palette', next); } catch (e) {}
+        cycle.classList.remove('spin');
+        void cycle.offsetWidth;
+        cycle.classList.add('spin');
+        syncMeta();
+      });
 
       // Menu: closes on a link, a click outside, or Escape
       const menu = document.querySelector('[data-menu]');

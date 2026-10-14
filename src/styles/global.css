@@ -34,6 +34,7 @@
   --t-blue: var(--blue);
   --hl: rgba(255, 179, 212, 0.3);
   --t-ok: var(--mint);
+  --backdrop: rgba(10, 8, 30, 0.55);
   --scan: rgba(0, 0, 0, 0.16);
   --floor-op: 0.45;
   color-scheme: dark;
@@ -51,9 +52,97 @@
   --t-blue: #2a66b5;
   --hl: var(--pink);
   --t-ok: #1c8457;
+  --backdrop: rgba(42, 35, 80, 0.22);
   --scan: rgba(42, 35, 80, 0.03);
   --floor-op: 0.8;
   color-scheme: light;
+}
+
+/* --------------------------------------------------------------------------
+   Colour palettes, cycled by clicking the logo square (an easter egg).
+   "candy" (pink and blue) is the default defined above. The --pink and
+   --blue names are roles: --pink is the lead colour, --blue the partner.
+   -------------------------------------------------------------------------- */
+
+/* Meadow: pastel green leading, pastel orange partnering */
+:root[data-palette='meadow'] {
+  --pink: #b6ebb4;
+  --blue: #ffa95e;
+  --mint: #a7e3d6;
+  --lemon: #fff1a8;
+  --lilac: #d8eba4;
+  --peach: #ffb7a1;
+  --on-pastel: #1d2b22;
+}
+
+:root[data-palette='meadow']:not([data-theme='light']) {
+  --bg: #0f1813;
+  --bg-line: rgba(182, 235, 180, 0.05);
+  --surface: #18261e;
+  --ink: #eef7ec;
+  --muted: #a1bba8;
+  --edge: #cfe8cc;
+  --hair: rgba(207, 232, 204, 0.28);
+  --hl: rgba(182, 235, 180, 0.28);
+  --backdrop: rgba(6, 14, 10, 0.55);
+}
+
+:root[data-palette='meadow'][data-theme='light'] {
+  --bg: #f6f8ee;
+  --bg-line: rgba(31, 51, 38, 0.055);
+  --ink: #1f3326;
+  --muted: #5a7262;
+  --edge: #1f3326;
+  --hair: rgba(31, 51, 38, 0.25);
+  --t-pink: #2e7a3c;
+  --t-blue: #9c4a06;
+  --t-ok: #2e7a3c;
+  --backdrop: rgba(31, 51, 38, 0.22);
+  --scan: rgba(31, 51, 38, 0.03);
+}
+
+/* Cherry: pastel red leading, a slightly deeper green partnering */
+:root[data-palette='cherry'] {
+  --pink: #ffa3a3;
+  --blue: #8fcf9c;
+  --mint: #b3e0c4;
+  --lemon: #ffe7a3;
+  --lilac: #f4b6c6;
+  --peach: #ffc2a3;
+  --on-pastel: #2b1519;
+}
+
+:root[data-palette='cherry']:not([data-theme='light']) {
+  --bg: #1a0f12;
+  --bg-line: rgba(255, 163, 163, 0.05);
+  --surface: #27181d;
+  --ink: #fbeff0;
+  --muted: #c6a4ab;
+  --edge: #f1d3d7;
+  --hair: rgba(241, 211, 215, 0.28);
+  --hl: rgba(255, 163, 163, 0.28);
+  --backdrop: rgba(16, 6, 9, 0.55);
+}
+
+:root[data-palette='cherry'][data-theme='light'] {
+  --bg: #fdf4f2;
+  --bg-line: rgba(58, 29, 34, 0.055);
+  --ink: #3a1d22;
+  --muted: #7b5960;
+  --edge: #3a1d22;
+  --hair: rgba(58, 29, 34, 0.25);
+  --t-pink: #b8323b;
+  --t-blue: #2b7a43;
+  --t-ok: #2b7a43;
+  --backdrop: rgba(58, 29, 34, 0.22);
+  --scan: rgba(58, 29, 34, 0.03);
+}
+
+/* Brief cross-fade while the palette changes */
+.palette-shift *,
+.palette-shift *::before,
+.palette-shift *::after {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, fill 0.4s ease !important;
 }
 
 *,
@@ -228,11 +317,44 @@ a {
   white-space: nowrap;
 }
 
+.menubar__left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* The logo square: clicking it cycles the colour palette */
+.logo-btn {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin-left: -7px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
 .menubar__logo {
   width: 16px;
   height: 16px;
   border: 2px solid var(--edge);
   background: linear-gradient(135deg, var(--pink) 0 50%, var(--blue) 50% 100%);
+  transition: transform 0.2s var(--ease);
+}
+
+.logo-btn:hover .menubar__logo {
+  transform: scale(1.15);
+}
+
+.logo-btn.spin .menubar__logo {
+  animation: quarter-turn 0.4s steps(4) both;
+}
+
+@keyframes quarter-turn {
+  from { transform: rotate(0deg) scale(1.15); }
+  to { transform: rotate(180deg) scale(1); }
 }
 
 .menubar__right {
@@ -735,14 +857,11 @@ a {
 }
 
 .modal::backdrop {
-  background: rgba(10, 8, 30, 0.55);
+  background: var(--backdrop, rgba(10, 8, 30, 0.55));
   -webkit-backdrop-filter: blur(7px);
   backdrop-filter: blur(7px);
 }
 
-:root[data-theme='light'] .modal::backdrop {
-  background: rgba(42, 35, 80, 0.22);
-}
 
 .modal__win {
   display: flex;
@@ -803,12 +922,6 @@ a {
 .modal__body {
   overflow-y: auto;
   overscroll-behavior: contain;
-}
-
-.modal__note {
-  margin-bottom: 22px;
-  color: var(--muted);
-  font-size: 14px;
 }
 
 /* Close button: a square pixel X at the end of the title bar */
@@ -1016,7 +1129,7 @@ a {
     padding: 0 8px 0 10px;
   }
 
-  .menubar__name,
+  .menubar__brand,
   .menubar__clock {
     display: none;
   }
