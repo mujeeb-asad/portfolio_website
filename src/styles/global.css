@@ -1021,8 +1021,18 @@ a {
     display: none;
   }
 
+  /* With the name hidden, the theme switch moves left beside the logo
+     and the menu stays alone on the far right */
+  .menubar {
+    justify-content: flex-start;
+  }
+
   .menubar__right {
-    gap: 8px;
+    display: contents;
+  }
+
+  .menu {
+    margin-left: auto;
   }
 
   .mode__opt {
