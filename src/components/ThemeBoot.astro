@@ -1,0 +1,16 @@
+---
+// Runs before first paint so a saved theme or palette never flashes the default.
+---
+<script is:inline>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add('js');
+    try {
+      var q = new URLSearchParams(location.search);
+      var saved = q.get('theme') || localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
+      var pal = q.get('palette') || localStorage.getItem('palette');
+      if (pal === 'meadow' || pal === 'cherry') root.setAttribute('data-palette', pal);
+    } catch (e) {}
+  })();
+</script>

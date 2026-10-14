@@ -6,41 +6,80 @@ import '@fontsource/ibm-plex-mono/500.css';
 import '@fontsource/ibm-plex-mono/600.css';
 import '../styles/global.css';
 import Window from '../components/Window.astro';
+import ThemeBoot from '../components/ThemeBoot.astro';
+// The two faces visible on first paint, preloaded so the heading does not reflow when they land
+import displayFont from '@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff2?url';
+import bodyFont from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
 import { person, intro, keywords, nav, hooks, projects, tools, leadership, contact, form, quickLinks } from '../data/site.js';
 
 const pad = (n) => String(n).padStart(2, '0');
 // Never ship an unconnected form: without a key it only renders in local development.
 const showForm = Boolean(form.accessKey) || import.meta.env.DEV;
+
+const home = new URL('/', Astro.site).href;
+const abs = (href) => new URL(href, Astro.site).href;
+const me = { '@id': `${home}#person` };
+
+// Structured data for search engines and AI assistants. Every fact here is also visible on the page.
+const works = projects.flatMap((p) => {
+  const link = (label) => p.links.find((l) => l.label === label)?.href;
+  const about = { name: p.title, author: me, dateCreated: p.meta[0], description: p.prose[0] };
+  const out = [];
+  if (link('Paper')) out.push({ '@type': 'ScholarlyArticle', headline: p.title, ...about, url: link('Paper') });
+  if (link('Code')) out.push({ '@type': 'SoftwareSourceCode', ...about, codeRepository: link('Code'), url: link('Live demo') ?? link('Code') });
+  return out;
+});
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebSite', '@id': `${home}#website`, url: home, name: person.name, inLanguage: 'en' },
+    {
+      '@type': 'ProfilePage', '@id': `${home}#profile`, url: home, name: person.title,
+      isPartOf: { '@id': `${home}#website` }, mainEntity: me, dateModified: new Date().toISOString(),
+    },
+    {
+      '@type': 'Person', ...me, name: person.name, url: home, email: `mailto:${person.email}`,
+      description: person.description, knowsAbout: keywords,
+      affiliation: { '@type': 'CollegeOrUniversity', name: person.university.name, url: person.university.url, sameAs: person.university.wiki },
+      sameAs: [person.github, person.linkedin],
+    },
+    ...works,
+  ],
+};
 ---
 <!doctype html>
 <html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{person.name}</title>
+    <title>{person.title}</title>
     <meta name="description" content={person.description} />
-    <meta property="og:title" content={person.name} />
+    <link rel="canonical" href={home} />
+    <meta name="author" content={person.name} />
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content={person.name} />
+    <meta property="og:title" content={person.title} />
     <meta property="og:description" content={person.description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={new URL('/', Astro.site)} />
-    <link rel="canonical" href={new URL('/', Astro.site)} />
+    <meta property="og:url" content={home} />
+    <meta property="og:image" content={abs(person.ogImage)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${person.name}, ${person.description}`} />
+    <meta property="profile:first_name" content="Mujeeb" />
+    <meta property="profile:last_name" content="Asad" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={person.title} />
+    <meta name="twitter:description" content={person.description} />
+    <meta name="twitter:image" content={abs(person.ogImage)} />
     <meta name="theme-color" content="#12102a" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3" />
-    <script is:inline>
-      (function () {
-        var root = document.documentElement;
-        root.classList.add('js');
-        try {
-          var q = new URLSearchParams(location.search);
-          var saved = q.get('theme') || localStorage.getItem('theme');
-          if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
-          var pal = q.get('palette') || localStorage.getItem('palette');
-          if (pal === 'meadow' || pal === 'cherry') root.setAttribute('data-palette', pal);
-        } catch (e) {}
-      })();
-    </script>
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={bodyFont} as="font" type="font/woff2" crossorigin />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\\u003c')} />
+    <ThemeBoot />
   </head>
   <body>
     <a class="skip" href="#projects">Skip to projects</a>
@@ -112,7 +151,7 @@ const showForm = Boolean(form.accessKey) || import.meta.env.DEV;
         <div class="stack">
           {projects.map((p, i) => (
             <Window id={p.id} title={`Project ${pad(i + 1)}`} accent={p.accent}>
-              <h3 class="proj__title">{p.title}</h3>
+              <h3 class="proj__title" id={`${p.id}-name`}>{p.title}</h3>
               <p class="proj__meta">
                 {p.meta.map((m, mi) => <>{mi > 0 && <i aria-hidden="true">/</i>}<span>{m}</span></>)}
               </p>

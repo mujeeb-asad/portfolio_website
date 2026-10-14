@@ -12,8 +12,13 @@ export const person = {
   github: 'https://github.com/mujeeb-asad',
   linkedin: 'https://www.linkedin.com/in/mujeeb-asad-23b322318/',
   cv: '/Mujeeb_Asad_CV.pdf',
+  // Search result and link preview title, kept under 60 characters
+  title: 'Mujeeb Asad | AI and ML Engineer, LUMS Computer Science',
+  // Search result snippet, kept under 160 characters
   description:
-    'Mujeeb Asad is a Computer Science senior at LUMS who builds software across the stack, with a focus on AI systems.',
+    'Mujeeb Asad is a Computer Science senior at LUMS building AI systems: vision models, LLM agents and the backends behind them. Projects, code and CV.',
+  ogImage: '/og.png',
+  university: { name: 'Lahore University of Management Sciences', url: 'https://lums.edu.pk', wiki: 'https://en.wikipedia.org/wiki/Lahore_University_of_Management_Sciences' },
 };
 
 // Intro prose. <b> marks the few names worth catching on a skim.

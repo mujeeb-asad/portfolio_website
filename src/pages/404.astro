@@ -1,0 +1,52 @@
+---
+import '@fontsource/press-start-2p/400.css';
+import '@fontsource/vt323/400.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '../styles/global.css';
+import ThemeBoot from '../components/ThemeBoot.astro';
+import { person } from '../data/site.js';
+---
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page not found | {person.name}</title>
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#12102a" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3" />
+    <ThemeBoot />
+  </head>
+  <body>
+    <main class="col lost">
+      <section class="win win--pink" aria-labelledby="lost-title">
+        <header class="win__bar">
+          <span class="win__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <p class="win__title" aria-hidden="true">Error 404</p>
+          <span class="win__stripes" aria-hidden="true"></span>
+        </header>
+        <div class="win__body">
+          <h1 class="proj__title" id="lost-title">Page not found</h1>
+          <div class="prose">
+            <p>There is nothing at this address. It may have moved, or the link had a typo.</p>
+          </div>
+          <div class="actions">
+            <a class="btn btn--primary" href="/">Back to the homepage</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <style>
+      .lost {
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: grid;
+        align-content: center;
+        padding-block: 48px;
+      }
+    </style>
+  </body>
+</html>

@@ -1,10 +1,12 @@
 ---
+// The bar label ("Project 01") is decoration; the window is named by the heading
+// inside it, which must carry the id `${id}-name`.
 const { id, title, accent = 'pink', class: cls = '' } = Astro.props;
 ---
-<section id={id} class={`win win--${accent} reveal ${cls}`} aria-labelledby={`${id}-title`}>
+<section id={id} class={`win win--${accent} reveal ${cls}`} aria-labelledby={`${id}-name`}>
   <header class="win__bar">
     <span class="win__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-    <h2 class="win__title" id={`${id}-title`}>{title}</h2>
+    <p class="win__title" aria-hidden="true">{title}</p>
     <span class="win__stripes" aria-hidden="true"></span>
   </header>
   <div class="win__body"><slot /></div>

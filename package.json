@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "og": "google-chrome --headless=new --disable-gpu --hide-scrollbars --allow-file-access-from-files --window-size=1200,630 --screenshot=public/og.png \"file://$PWD/og/card.html\""
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@fontsource/press-start-2p": "^5.3.0",
     "@fontsource/vt323": "^5.3.0",
