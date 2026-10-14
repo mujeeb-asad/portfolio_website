@@ -22,6 +22,8 @@ const showForm = Boolean(form.accessKey) || import.meta.env.DEV;
     <meta property="og:title" content={person.name} />
     <meta property="og:description" content={person.description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={new URL('/', Astro.site)} />
+    <link rel="canonical" href={new URL('/', Astro.site)} />
     <meta name="theme-color" content="#12102a" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3" />
